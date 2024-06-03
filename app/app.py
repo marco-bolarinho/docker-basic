@@ -20,64 +20,48 @@ def parse_params():
         num1 = float(request.args.get("num1"))
         num2 = float(request.args.get("num2"))
         return [num1, num2]
-    except ValueError as e:
+    except ValueError as _:
         return []
+
+
+def process(operation: str) -> jsonify:
+    nums = parse_params()
+
+    if len(nums) == 0:
+        return jsonify({
+            "error": "invalid parameters"
+        })
+
+    result = 0
+    match operation:
+        case "+": result = nums[0] + nums[1]
+        case "-": result = nums[0] - nums[1]
+        case "*": result = nums[0] * nums[1]
+        case "/": result = nums[0] / nums[1]
+
+    return jsonify({
+        "result": result,
+    })
 
 
 @app.route("/add")
 def add():
-    nums = parse_params()
-
-    if len(nums) == 0:
-        return jsonify({
-            "error": "invalid parameters"
-        })
-
-    return jsonify({
-        "result": nums[0] + nums[1]
-    })
+    return process("+")
 
 
 @app.route("/sub")
 def sub():
-    nums = parse_params()
-
-    if len(nums) == 0:
-        return jsonify({
-            "error": "invalid parameters"
-        })
-
-    return jsonify({
-        "result": nums[0] - nums[1]
-    })
+    return process("-")
 
 
 @app.route("/div")
 def div():
-    nums = parse_params()
-
-    if len(nums) == 0:
-        return jsonify({
-            "error": "invalid parameters"
-        })
-
-    return jsonify({
-        "result": nums[0] / nums[1]
-    })
+    return process("/")
 
 
 @app.route("/mul")
 def mul():
-    nums = parse_params()
-
-    if len(nums) == 0:
-        return jsonify({
-            "error": "invalid parameters"
-        })
-
-    return jsonify({
-        "result": nums[0] * nums[1]
-    })
+    return process("*")
 
 
 if __name__ == '__main__':
